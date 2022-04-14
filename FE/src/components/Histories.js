@@ -1,18 +1,14 @@
 import HistoryCard from "./HistoryCard.js";
 import { store } from "../store.js";
-import { GET_HISTORY } from "../dummyData.js";
 import { $ } from "../utils.js";
 
 export default class Histories {
   constructor(target) {
     this.target = target;
-    this.historyCardComponents = GET_HISTORY.map(
-      (history) => new HistoryCard(history)
-    );
     store.initState("history");
     store.subscribe("history", this.render.bind(this));
-    store.setState("history", GET_HISTORY);
   }
+
   template() {
     return `
         <button class="history__btn--close">x</button>
@@ -22,12 +18,23 @@ export default class Histories {
         )}
     `;
   }
+
   render() {
     this.target.innerHTML = this.template();
   }
+
   addEvent() {
-    $(".header__menu").addEventListener("click", showHistoryView);
-    $(".history__btn--close").addEventListener("click", hideHistoryView);
+    $(".header__menu").addEventListener("click", () => {
+      showHistoryView();
+      const historyData = requestData();
+      this.historyCardComponents = historyData.map(
+        (history) => new HistoryCard(history)
+      );
+      store.setState("history", historyData);
+    });
+    $(".history__btn--close").addEventListener("click", () => {
+      hideHistoryView();
+    });
   }
 }
 
@@ -37,4 +44,15 @@ function showHistoryView() {
 
 function hideHistoryView() {
   $(".history").style.right = "-45.2rem";
+}
+
+async function requestData() {
+  const url = "http://3.38.224.138/histories";
+  const res = await fetch(url, {
+    mode: "cors",
+    credentials: "include",
+  });
+  const data = res.json();
+
+  return data;
 }

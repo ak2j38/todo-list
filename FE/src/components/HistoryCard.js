@@ -2,10 +2,6 @@ export default class HistoryCard {
   constructor(state) {
     this.state = state;
   }
-  init() {
-    
-  }
-  
   template() {
     return `
       <div class="history__container">
