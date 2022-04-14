@@ -65,4 +65,5 @@ export default class Column {
     list.insertAdjacentHTML("afterbegin", modificationForm.template());
     modificationForm.addEvent();
   }
+  handleAppendCard() {}
 }
