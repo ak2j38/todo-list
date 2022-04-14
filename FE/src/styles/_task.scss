@@ -16,18 +16,18 @@
   @include task-input-exclude;
 }
 
-.task-active {
-  @include task($blue, true);
-  @include task-input-include;
-}
-
-.task-deactivate {
+.task {
   @include task($blue, true);
   @include task-input-include(false);
-
   &__btns {
     justify-content: space-between;
   }
+}
+
+.active {
+  background-color: $blue;
+  color: $white;
+  cursor: pointer;
 }
 
 .task-delete {

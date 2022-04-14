@@ -63,6 +63,7 @@ export default class Column {
     const list = $(`.list-${this.columnId}`);
     const modificationForm = new CardModificationForm();
     list.insertAdjacentHTML("afterbegin", modificationForm.template());
+    modificationForm.addEvent();
   }
   hideModificationForm(e) {
     $(".task-deactivate").remove();
