@@ -23,13 +23,13 @@ export default class Column {
           <div class="work__btn">
             <div 
               data-name="${this.columnTitle}" 
-              class="work__btn--add ${this.columnTitle}-btn">
+              class="work__btn--add btn-${this.columnId}">
             </div>
             <div class="work__btn--remove"></div>
           </div>
         </div>
         <div class="work__body">
-          <ul class="work__list ${this.columnTitle}-list">
+          <ul class="work__list list-${this.columnId}">
             ${this.taskCardComponents.reduce(
               (prev, cur) =>
                 prev + `<div class="${cur.id}">${cur.template()}</div>`,
@@ -44,9 +44,9 @@ export default class Column {
     return this.taskCardComponents.length;
   }
   addEvent() {
-    $("body")
-      .querySelector(`.${this.columnTitle}-btn`)
-      .addEventListener("click", (e) => this.handleCardAddition(e));
+    $(`.btn-${this.columnId}`).addEventListener("click", (e) =>
+      this.handleCardAddition(e)
+    );
   }
 
   handleCardAddition(e) {
@@ -60,7 +60,7 @@ export default class Column {
   }
   showModificationForm(e) {
     const columnName = e.target.dataset.name;
-    const list = $(`.${columnName}-list`);
+    const list = $(`.list-${this.columnId}`);
     const modificationForm = new CardModificationForm();
     list.insertAdjacentHTML("afterbegin", modificationForm.template());
   }
