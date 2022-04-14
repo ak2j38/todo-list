@@ -2,4 +2,8 @@ function $(selector) {
   return document.querySelector(`${selector}`);
 }
 
-export { $ };
+function removeElement(el) {
+  el.remove();
+}
+
+export { $, removeElement };

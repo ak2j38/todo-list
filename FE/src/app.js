@@ -1,6 +1,7 @@
 import "../src/styles/main.scss";
 import Columns from "./components/Columns.js";
 import Histories from "./components/Histories.js";
+import { store } from "./store";
 
 window.addEventListener("DOMContentLoaded", () => {
   const worksEl = document.querySelector(".works");

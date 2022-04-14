@@ -16,18 +16,29 @@
   @include task-input-exclude;
 }
 
-.task-active {
-  @include task($blue, true);
-  @include task-input-include;
-}
-
-.task-deactivate {
+.task {
   @include task($blue, true);
   @include task-input-include(false);
-
   &__btns {
     justify-content: space-between;
   }
+  &__desc {
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 1.4rem;
+    &:empty:before {
+      content: attr(data-placeholder);
+      color: gray;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.active {
+  background-color: $blue;
+  color: $white;
+  cursor: pointer;
 }
 
 .task-delete {

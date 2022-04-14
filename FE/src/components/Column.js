@@ -1,12 +1,15 @@
 import { GET_CARD } from "../dummyData.js";
-import { $ } from "../utils.js";
+import { $, removeElement } from "../utils.js";
 import { CardModificationForm } from "./CardModificationForm.js";
 import TaskCard from "./TaskCard.js";
 
 export default class Column {
-  constructor(columnTitle) {
-    this.columnTitle = columnTitle;
-    this.taskCardComponents = GET_CARD.map((card) => new TaskCard(card));
+  constructor(column) {
+    this.columnId = column.id;
+    this.columnTitle = column.title;
+    this.taskCardComponents = GET_CARD(this.columnId).map(
+      (card) => new TaskCard(card)
+    );
     this.isOpenModificationForm = false;
   }
   template() {
@@ -20,13 +23,13 @@ export default class Column {
           <div class="work__btn">
             <div 
               data-name="${this.columnTitle}" 
-              class="work__btn--add ${this.columnTitle}-btn">
+              class="work__btn--add btn-${this.columnId}">
             </div>
             <div class="work__btn--remove"></div>
           </div>
         </div>
         <div class="work__body">
-          <ul class="work__list ${this.columnTitle}-list">
+          <ul class="work__list list-${this.columnId}">
             ${this.taskCardComponents.reduce(
               (prev, cur) =>
                 prev + `<div class="${cur.id}">${cur.template()}</div>`,
@@ -41,27 +44,25 @@ export default class Column {
     return this.taskCardComponents.length;
   }
   addEvent() {
-    $("body")
-      .querySelector(`.${this.columnTitle}-btn`)
-      .addEventListener("click", (e) => this.handleCardAddition(e));
+    $(`.btn-${this.columnId}`).addEventListener("click", (e) =>
+      this.handleCardAddition(e)
+    );
   }
 
   handleCardAddition(e) {
-    if (!this.isOpenModificationForm) {
-      this.showModificationForm(e);
-      this.isOpenModificationForm = true;
+    if (this.isOpenModificationForm) {
+      const modificationForm = $(".task");
+      removeElement(modificationForm);
+      this.isOpenModificationForm = false;
       return;
     }
-    this.hideModificationForm(e);
-    this.isOpenModificationForm = false;
+    this.createModificationForm();
+    this.isOpenModificationForm = true;
   }
-  showModificationForm(e) {
-    const columnName = e.target.dataset.name;
-    const list = $(`.${columnName}-list`);
-    const modificationForm = new CardModificationForm();
+  createModificationForm() {
+    const list = $(`.list-${this.columnId}`);
+    const modificationForm = new CardModificationForm({ column: this });
     list.insertAdjacentHTML("afterbegin", modificationForm.template());
-  }
-  hideModificationForm(e) {
-    $(".task-deactivate").remove();
+    modificationForm.addEvent();
   }
 }
