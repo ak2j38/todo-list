@@ -8,7 +8,7 @@ export default class Column {
     this.columnId = column.id;
     this.columnTitle = column.title;
     this.taskCardComponents = GET_CARD(this.columnId).map(
-      (card) => new TaskCard(card)
+      (card) => new TaskCard({ column, card })
     );
     // this.taskCardComponents.forEach((taskCardComponent) => {
     //   taskCardComponent.addEvent();
@@ -65,7 +65,11 @@ export default class Column {
   createModificationForm() {
     const list = $(`.list-${this.columnId}`);
     const card = { title: "", contents: "" };
-    const modificationForm = new CardModificationForm({ column: this, card });
+    const modificationForm = new CardModificationForm({
+      column: this,
+      card,
+      type: "addition",
+    });
     list.insertAdjacentHTML("afterbegin", modificationForm.template());
     modificationForm.addEvent();
   }

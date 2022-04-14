@@ -3,12 +3,16 @@ import { $ } from "../utils.js";
 import { CardModificationForm } from "./CardModificationForm.js";
 
 export default class TaskCard {
-  constructor(card) {
+  constructor({ column, card }) {
+    console.log("column", column);
+    console.log("card", card);
     this.id = card.id;
+    this.column = column;
     this.card = card;
     store.initState(this.id);
     store.setState(this.id, card);
-    store.subscribe(this.id, this.render.bind(this));
+    store.subscribe(this.id, () => this.render());
+    store.subscribe(this.id, () => this.addEvent());
   }
   template() {
     // types = ["idle", "delete", "drag", "place"];
@@ -42,22 +46,16 @@ export default class TaskCard {
       cardEl.style.display = "none";
 
       // 더블클릭한 박스 정보 토대로 카드수정폼 생성
-      const modificationForm = new CardModificationForm({ card: this.card });
+      const modificationForm = new CardModificationForm({
+        column: this.column,
+        card: store.state[this.card.id],
+        type: "modification",
+      });
       $(`.card-${this.id}`).insertAdjacentHTML(
         "afterbegin",
         modificationForm.template()
       );
-
-      // console.log(modificationForm);
-
-      const newState = {
-        id: this.id,
-        userId: "rumka",
-        title: "카드 생성",
-        contents: "하기",
-        cardStatusName: "해야할 일",
-      };
-      // store.setState(this.id, newState);
+      modificationForm.addEvent();
     });
   }
 }

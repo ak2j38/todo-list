@@ -1,12 +1,13 @@
+import { store } from "../store";
 import { $, removeElement } from "../utils";
 import TaskCard from "./TaskCard";
 
 export class CardModificationForm {
-  constructor({ target, column, card }) {
-    this.target = target;
+  constructor({ column, card, type }) {
     this.column = column;
     this.card = card;
     this.isOccupiedInput = false;
+    this.type = type; // "addition" or "modification"
   }
   template() {
     const MAX_LENGTH = {
@@ -53,6 +54,11 @@ export class CardModificationForm {
   removeModificationForm() {
     removeElement($(".task"));
     this.column.isOpenModificationForm = false;
+
+    if (this.type === "modification") {
+      const cardEl = $(`.item-${this.card.id}`);
+      cardEl.style.display = "block";
+    }
   }
   handleAppendCard(e) {
     if (!this.isOccupiedInput) return;
@@ -60,18 +66,25 @@ export class CardModificationForm {
     const contents = $(".task__desc").innerText;
     // TODO: CORS 이슈 해결되면 API 연동할 것.
     const dummyCard = {
-      id: 10,
+      id: this.card.id,
       userId: "RUMKA",
       title,
       contents,
       cardStatusName: "해야할 일",
     };
 
-    const taskCard = new TaskCard(dummyCard);
-    const listEl = $(`.list-${this.column.columnId}`);
-    listEl.insertAdjacentHTML("afterbegin", taskCard.template());
+    if (this.type === "addition") {
+      const taskCard = new TaskCard({ column: this.column, card: dummyCard });
+      const listEl = $(`.list-${this.column.columnId}`);
+      listEl.insertAdjacentHTML("afterbegin", taskCard.template());
+      this.removeModificationForm();
+      return;
+    }
 
-    this.removeModificationForm();
+    if (this.type === "modification") {
+      const cardEl = $(`.item-${this.card.id}`);
+      store.setState(this.card.id, dummyCard);
+    }
   }
 }
 
