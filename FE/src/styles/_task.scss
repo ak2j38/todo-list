@@ -1,6 +1,10 @@
 .task-idle {
   @include task;
   @include task-input-exclude;
+  &__btn--remove:hover {
+    filter: invert(38%) sepia(95%) saturate(2824%) hue-rotate(341deg)
+      brightness(97%) contrast(87%);
+  }
 }
 
 .task-drag {

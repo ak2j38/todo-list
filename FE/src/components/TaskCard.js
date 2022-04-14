@@ -4,13 +4,11 @@ import { CardModificationForm } from "./CardModificationForm.js";
 
 export default class TaskCard {
   constructor({ column, card }) {
-    console.log("column", column);
-    console.log("card", card);
     this.id = card.id;
     this.column = column;
     this.card = card;
     store.initState(this.id);
-    store.setState(this.id, card);
+    store.setState(this.id, this.card);
     store.subscribe(this.id, () => this.render());
     store.subscribe(this.id, () => this.addEvent());
   }
@@ -38,24 +36,24 @@ export default class TaskCard {
     // store.subscribe(this.id, this.render.bind(this));
   }
   addEvent() {
-    $(`.item-${this.id}`).addEventListener("dblclick", (e) => {
-      // function 담당해라_카드_수정
+    $(`.item-${this.id}`).addEventListener("dblclick", () =>
+      this.handleCardModification()
+    );
+  }
 
-      // 기존 카드 숨기기
-      const cardEl = $(`.item-${this.id}`);
-      cardEl.style.display = "none";
+  handleCardModification() {
+    const cardEl = $(`.item-${this.id}`);
+    cardEl.style.display = "none";
 
-      // 더블클릭한 박스 정보 토대로 카드수정폼 생성
-      const modificationForm = new CardModificationForm({
-        column: this.column,
-        card: store.state[this.card.id],
-        type: "modification",
-      });
-      $(`.card-${this.id}`).insertAdjacentHTML(
-        "afterbegin",
-        modificationForm.template()
-      );
-      modificationForm.addEvent();
+    const modificationForm = new CardModificationForm({
+      column: this.column,
+      card: store.state[this.id],
+      type: "modification",
     });
+    $(`.card-${this.id}`).insertAdjacentHTML(
+      "afterbegin",
+      modificationForm.template()
+    );
+    modificationForm.addEvent();
   }
 }

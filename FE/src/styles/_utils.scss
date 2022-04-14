@@ -120,6 +120,7 @@
   }
 
   &__cancel {
+    cursor: pointer;
     @include button-gray;
   }
 

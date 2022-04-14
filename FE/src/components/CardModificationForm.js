@@ -61,6 +61,7 @@ export class CardModificationForm {
     }
   }
   handleAppendCard(e) {
+    console.log(store);
     if (!this.isOccupiedInput) return;
     const title = $(".task__title").value;
     const contents = $(".task__desc").innerText;
@@ -74,15 +75,18 @@ export class CardModificationForm {
     };
 
     if (this.type === "addition") {
-      const taskCard = new TaskCard({ column: this.column, card: dummyCard });
+      const taskCard = new TaskCard({
+        column: this.column,
+        card: dummyCard,
+      });
       const listEl = $(`.list-${this.column.columnId}`);
       listEl.insertAdjacentHTML("afterbegin", taskCard.template());
+      taskCard.addEvent();
       this.removeModificationForm();
       return;
     }
 
     if (this.type === "modification") {
-      const cardEl = $(`.item-${this.card.id}`);
       store.setState(this.card.id, dummyCard);
     }
   }
