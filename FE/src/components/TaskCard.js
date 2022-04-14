@@ -1,6 +1,7 @@
 import { store } from "../store.js";
 import { $ } from "../utils.js";
 import { CardModificationForm } from "./CardModificationForm.js";
+import Modal from "./Modal.js";
 
 export default class TaskCard {
   constructor({ column, card }) {
@@ -14,18 +15,17 @@ export default class TaskCard {
   }
   template() {
     // types = ["idle", "delete", "drag", "place"];
-    const type = "idle";
-    const card = store.state[this.id];
+    this.card = store.state[this.id];
     return `
         <li class="work__item item-${this.id}">
-          <div class="task-${type}">
-            <div class="task-${type}__contents">
-              <h3 class="task-${type}__title">${card.title}</h3>
-              <p class="task-${type}__desc">${card.contents}</p>
-              <strong class="task-${type}__author">author by ${card.userId}</strong>
+          <div class="task-idle">
+            <div class="task-idle__contents">
+              <h3 class="task-idle__title">${this.card.title}</h3>
+              <p class="task-idle__desc">${this.card.contents}</p>
+              <strong class="task-idle__author">author by ${this.card.userId}</strong>
             </div>
-            <div class="task-${type}__btn">
-              <div class="task-${type}__btn--remove"></div>
+            <div class="task-idle__btn">
+              <div class="task-idle__btn--remove remove-btn-${this.id}"></div>
             </div>
           </div>
         </li>
@@ -33,12 +33,14 @@ export default class TaskCard {
   }
   render() {
     $(`.card-${this.id}`).innerHTML = this.template();
-    // store.subscribe(this.id, this.render.bind(this));
   }
   addEvent() {
     $(`.item-${this.id}`).addEventListener("dblclick", () =>
       this.handleCardModification()
     );
+    $(`.remove-btn-${this.card.id}`).addEventListener("click", (e) => {
+      const modalEl = new Modal({ target: $(".wrap"), card: this.card });
+    });
   }
 
   handleCardModification() {
