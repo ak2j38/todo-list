@@ -26,8 +26,15 @@ export default class Histories {
   addEvent() {
     $(".header__menu").addEventListener("click", () => {
       showHistoryView();
+<<<<<<< HEAD
       const historyData = requestHistoryData();
       this.historyCardComponents = setHistoryDataToHistoryCard(historyData);
+=======
+      const historyData = requestData();
+      this.historyCardComponents = historyData.map(
+        (history) => new HistoryCard(history)
+      );
+>>>>>>> 930f577e93865b62fc46aba33cbf68286b273141
       store.setState("history", historyData);
     });
     $(".history__btn--close").addEventListener("click", () => {
@@ -44,11 +51,15 @@ function hideHistoryView() {
   $(".history").style.right = "-45.2rem";
 }
 
+<<<<<<< HEAD
 function setHistoryDataToHistoryCard(historydata) {
   return historydata.map((history) => new HistoryCard(history));
 }
 
 async function requestHistoryData() {
+=======
+async function requestData() {
+>>>>>>> 930f577e93865b62fc46aba33cbf68286b273141
   const url = "http://3.38.224.138/histories";
   const res = await fetch(url, {
     mode: "cors",
