@@ -4,9 +4,12 @@ import { CardModificationForm } from "./CardModificationForm.js";
 import TaskCard from "./TaskCard.js";
 
 export default class Column {
-  constructor(columnTitle) {
-    this.columnTitle = columnTitle;
-    this.taskCardComponents = GET_CARD.map((card) => new TaskCard(card));
+  constructor(column) {
+    this.columnId = column.id;
+    this.columnTitle = column.title;
+    this.taskCardComponents = GET_CARD(this.columnId).map(
+      (card) => new TaskCard(card)
+    );
     this.isOpenModificationForm = false;
   }
   template() {

@@ -1,10 +1,10 @@
+import { GET_COLUMNS } from "../dummyData.js";
 import Column from "./Column.js";
 
 export default class Columns {
   constructor(target) {
     this.target = target;
-    const columnTitles = ["TODO", "ONGOING", "DONE"];
-    this.columnComponents = columnTitles.map((name) => new Column(name));
+    this.columnComponents = GET_COLUMNS.map((column) => new Column(column));
   }
 
   template() {
