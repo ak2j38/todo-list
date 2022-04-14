@@ -1,5 +1,5 @@
 import { GET_CARD } from "../dummyData.js";
-import { $ } from "../utils.js";
+import { $, removeElement } from "../utils.js";
 import { CardModificationForm } from "./CardModificationForm.js";
 import TaskCard from "./TaskCard.js";
 
@@ -50,22 +50,19 @@ export default class Column {
   }
 
   handleCardAddition(e) {
-    if (!this.isOpenModificationForm) {
-      this.showModificationForm(e);
-      this.isOpenModificationForm = true;
+    if (this.isOpenModificationForm) {
+      const modificationForm = $(".task");
+      removeElement(modificationForm);
+      this.isOpenModificationForm = false;
       return;
     }
-    this.hideModificationForm(e);
-    this.isOpenModificationForm = false;
+    this.createModificationForm();
+    this.isOpenModificationForm = true;
   }
-  showModificationForm(e) {
-    const columnName = e.target.dataset.name;
+  createModificationForm() {
     const list = $(`.list-${this.columnId}`);
-    const modificationForm = new CardModificationForm();
+    const modificationForm = new CardModificationForm({ column: this });
     list.insertAdjacentHTML("afterbegin", modificationForm.template());
     modificationForm.addEvent();
-  }
-  hideModificationForm(e) {
-    $(".task-deactivate").remove();
   }
 }

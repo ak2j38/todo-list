@@ -1,15 +1,21 @@
-import { $ } from "../utils";
+import { $, removeElement } from "../utils";
+
+const MAX_LENGTH = {
+  TITLE: 50,
+  CONTENTS: 500,
+};
 
 export class CardModificationForm {
-  constructor(target) {
+  constructor({ target, column }) {
     this.target = target;
+    this.column = column;
   }
   template() {
     return `
       <li>
         <div class="task">
-          <input type="text" class="task__title" placeholder="TITLE">
-          <input type="text" class="task__desc" placeholder="BODY">
+          <input type="text" class="task__title" placeholder="TITLE" maxlength="${MAX_LENGTH.TITLE}">
+          <input type="text" class="task__desc" placeholder="BODY" maxlength="${MAX_LENGTH.CONTENTS}">
           <div class="task__btns">
             <button class="task__cancel">취소</button>
             <button class="task__confirm">등록</button>
@@ -21,10 +27,14 @@ export class CardModificationForm {
   addEvent() {
     const taskTitleEl = $(".task__title");
     const taskDescEl = $(".task__desc");
-    taskTitleEl.addEventListener("keyup", (e) => this.handleInputLength(e));
-    taskDescEl.addEventListener("keyup", (e) => this.handleInputLength(e));
+    const taskCancelBtn = $(".task__cancel");
+    taskTitleEl.addEventListener("keyup", (e) => this.handleInput(e));
+    taskDescEl.addEventListener("keyup", (e) => this.handleInput(e));
+    taskCancelBtn.addEventListener("click", () =>
+      this.removeModificationForm()
+    );
   }
-  handleInputLength(e) {
+  handleInput(e) {
     const taskTitleEl = $(".task__title");
     const taskDescEl = $(".task__desc");
     const isOccupiedInput = taskTitleEl.value.length || taskDescEl.value.length;
@@ -34,6 +44,10 @@ export class CardModificationForm {
       return;
     }
     removeClass({ el: confirmBtn, className: "active" });
+  }
+  removeModificationForm() {
+    removeElement($(".task"));
+    this.column.isOpenModificationForm = false;
   }
 }
 
