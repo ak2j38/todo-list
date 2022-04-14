@@ -20,6 +20,7 @@ export default class Columns {
 
     this.columnComponents.forEach((column) => {
       column.addEvent();
+      column.taskCardComponents.forEach((card) => card.addEvent());
     });
   }
 }

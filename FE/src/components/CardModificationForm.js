@@ -2,9 +2,10 @@ import { $, removeElement } from "../utils";
 import TaskCard from "./TaskCard";
 
 export class CardModificationForm {
-  constructor({ target, column }) {
+  constructor({ target, column, card }) {
     this.target = target;
     this.column = column;
+    this.card = card;
     this.isOccupiedInput = false;
   }
   template() {
@@ -15,8 +16,8 @@ export class CardModificationForm {
     return `
       <li>
         <div class="task">
-          <input type="text" class="task__title" placeholder="TITLE" maxlength="${MAX_LENGTH.TITLE}">
-          <div name="text" class="task__desc" data-placeholder="BODY" maxlength="${MAX_LENGTH.CONTENTS}" contenteditable="true"></div>
+          <input type="text" class="task__title" placeholder="TITLE" maxlength="${MAX_LENGTH.TITLE}" value="${this.card.title}">
+          <div name="text" class="task__desc" data-placeholder="BODY" maxlength="${MAX_LENGTH.CONTENTS}" contenteditable="true">${this.card.contents}</div>
           <div class="task__btns">
             <button class="task__cancel">취소</button>
             <button class="task__confirm">등록</button>
