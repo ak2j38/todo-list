@@ -1,4 +1,5 @@
 import { GET_CARD } from "../dummyData.js";
+import { store } from "../store.js";
 import { $, removeElement } from "../utils.js";
 import { CardModificationForm } from "./CardModificationForm.js";
 import TaskCard from "./TaskCard.js";
@@ -12,6 +13,7 @@ export default class Column {
     );
     this.isOpenModificationForm = false;
   }
+
   template() {
     return `
       <div class="work">
@@ -32,7 +34,7 @@ export default class Column {
           <ul class="work__list list-${this.columnId}">
             ${this.taskCardComponents.reduce(
               (prev, cur) =>
-                prev + `<div class="${cur.id}">${cur.template()}</div>`,
+                `${prev}<div class="card-${cur.id}">${cur.template()}</div>`,
               ""
             )}
           </ul>
@@ -40,13 +42,32 @@ export default class Column {
       </div>
     `;
   }
+
   getCardLength() {
     return this.taskCardComponents.length;
   }
+
   addEvent() {
     $(`.btn-${this.columnId}`).addEventListener("click", (e) =>
       this.handleCardAddition(e)
     );
+    document.querySelectorAll(".work__body").forEach((e) => {
+      e.addEventListener("mouseover", ({ target }) => {
+        if (target.dataset.num) {
+          this.taskCardComponents[target.dataset.num - 1].type = "delete";
+          this.taskCardComponents[target.dataset.num - 1].render();
+          console.log(this.taskCardComponents, target.dataset.num);
+          console.log(store);
+        }
+      });
+    });
+    // $(".work__body").addEventListener("mouseout", ({ target }) => {
+    //   if (target.dataset.num) {
+    //     this.taskCardComponents[target.dataset.num - 1].type = "idle";
+    //     this.taskCardComponents[target.dataset.num - 1].render();
+    //     console.log("!");
+    //   }
+    // });
   }
 
   handleCardAddition(e) {
@@ -59,6 +80,7 @@ export default class Column {
     this.createModificationForm();
     this.isOpenModificationForm = true;
   }
+
   createModificationForm() {
     const list = $(`.list-${this.columnId}`);
     const modificationForm = new CardModificationForm({ column: this });
