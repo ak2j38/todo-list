@@ -1,21 +1,20 @@
 import { $, removeElement } from "../utils";
 
-const MAX_LENGTH = {
-  TITLE: 50,
-  CONTENTS: 500,
-};
-
 export class CardModificationForm {
   constructor({ target, column }) {
     this.target = target;
     this.column = column;
   }
   template() {
+    const MAX_LENGTH = {
+      TITLE: 50,
+      CONTENTS: 500,
+    };
     return `
       <li>
         <div class="task">
           <input type="text" class="task__title" placeholder="TITLE" maxlength="${MAX_LENGTH.TITLE}">
-          <input type="text" class="task__desc" placeholder="BODY" maxlength="${MAX_LENGTH.CONTENTS}">
+          <div name="text" class="task__desc" data-placeholder="BODY" maxlength="${MAX_LENGTH.CONTENTS}" contenteditable="true"></div>
           <div class="task__btns">
             <button class="task__cancel">취소</button>
             <button class="task__confirm">등록</button>
@@ -37,7 +36,8 @@ export class CardModificationForm {
   handleInput(e) {
     const taskTitleEl = $(".task__title");
     const taskDescEl = $(".task__desc");
-    const isOccupiedInput = taskTitleEl.value.length || taskDescEl.value.length;
+    const isOccupiedInput =
+      taskTitleEl.value.length || taskDescEl.innerText.length;
     const confirmBtn = $(".task__confirm");
     if (isOccupiedInput) {
       addClass({ el: confirmBtn, className: "active" });

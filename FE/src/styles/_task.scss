@@ -22,6 +22,17 @@
   &__btns {
     justify-content: space-between;
   }
+  &__desc {
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 1.4rem;
+    &:empty:before {
+      content: attr(data-placeholder);
+      color: gray;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 .active {
