@@ -23,7 +23,7 @@
     cursor: pointer;
     font-size: $column-title-fs;
     font-weight: $column-title-wgt;
-    margin-right: .8rem;
+    margin-right: 0.8rem;
   }
 
   &__counter {
@@ -41,8 +41,9 @@
 
   &__item {
     background-color: $task-default;
-    border-radius: .6rem;
-    box-shadow: 0 .1rem 3rem $task-box-shadow;
+    border-radius: 0.6rem;
+    box-shadow: 0 0.1rem 3rem $task-box-shadow;
+    cursor: pointer;
   }
 
   &__btn {
@@ -52,20 +53,22 @@
   }
 
   &__btn--add {
-    @include worklist-task-btn('../assets/worklist-add-default.svg');
+    @include worklist-task-btn("../assets/worklist-add-default.svg");
     margin-right: 1.986rem;
+    cursor: pointer;
   }
 
   &__btn--add:hover {
-    @include worklist-task-btn('../assets/worklist-add-hover.svg');
+    @include worklist-task-btn("../assets/worklist-add-hover.svg");
   }
 
   &__btn--remove {
-    @include worklist-task-btn('../assets/worklist-remove-default.svg');
-    margin-top: .3rem;
+    @include worklist-task-btn("../assets/worklist-remove-default.svg");
+    margin-top: 0.3rem;
+    cursor: pointer;
   }
 
   &__btn--remove:hover {
-    @include worklist-task-btn('../assets/worklist-remove-hover.svg');
+    @include worklist-task-btn("../assets/worklist-remove-hover.svg");
   }
 }

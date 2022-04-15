@@ -8,8 +8,11 @@ export default class Column {
     this.columnId = column.id;
     this.columnTitle = column.title;
     this.taskCardComponents = GET_CARD(this.columnId).map(
-      (card) => new TaskCard(card)
+      (card) => new TaskCard({ column, card })
     );
+    // this.taskCardComponents.forEach((taskCardComponent) => {
+    //   taskCardComponent.addEvent();
+    // });
     this.isOpenModificationForm = false;
   }
   template() {
@@ -32,7 +35,7 @@ export default class Column {
           <ul class="work__list list-${this.columnId}">
             ${this.taskCardComponents.reduce(
               (prev, cur) =>
-                prev + `<div class="${cur.id}">${cur.template()}</div>`,
+                prev + `<div class="card-${cur.id}">${cur.template()}</div>`,
               ""
             )}
           </ul>
@@ -61,7 +64,12 @@ export default class Column {
   }
   createModificationForm() {
     const list = $(`.list-${this.columnId}`);
-    const modificationForm = new CardModificationForm({ column: this });
+    const card = { title: "", contents: "" };
+    const modificationForm = new CardModificationForm({
+      column: this,
+      card,
+      type: "addition",
+    });
     list.insertAdjacentHTML("afterbegin", modificationForm.template());
     modificationForm.addEvent();
   }

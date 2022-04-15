@@ -1,33 +1,65 @@
 import { store } from "../store.js";
 import { $ } from "../utils.js";
+import { CardModificationForm } from "./CardModificationForm.js";
+import Modal from "./Modal.js";
 
 export default class TaskCard {
-  constructor(card) {
+  constructor({ column, card }) {
     this.id = card.id;
+    this.column = column;
+    this.card = card;
     store.initState(this.id);
-    store.setState(this.id, card);
+    store.setState(this.id, this.card);
+    store.subscribe(this.id, () => this.render());
+    store.subscribe(this.id, () => this.addEvent());
   }
   template() {
     // types = ["idle", "delete", "drag", "place"];
-    const type = "idle";
-    const card = store.state[this.id];
+    this.card = store.state[this.id];
     return `
-        <li class="work__item">
-          <div class="task-${type}">
-            <div class="task-${type}__contents">
-              <h3 class="task-${type}__title">${card.title}</h3>
-              <p class="task-${type}__desc">${card.contents}</p>
-              <strong class="task-${type}__author">author by ${card.userId}</strong>
+        <li class="work__item item-${this.id}">
+          <div class="task-idle">
+            <div class="task-idle__contents">
+              <h3 class="task-idle__title">${this.card.title}</h3>
+              <p class="task-idle__desc">${this.card.contents}</p>
+              <strong class="task-idle__author">author by ${this.card.userId}</strong>
             </div>
-            <div class="task-${type}__btn">
-              <div class="task-${type}__btn--remove"></div>
+            <div class="task-idle__btn">
+              <div class="task-idle__btn--remove remove-btn-${this.id}"></div>
             </div>
           </div>
         </li>
     `;
   }
   render() {
-    $(`.${this.id}`).innerHTML = this.template();
-    store.subscribe(this.id, this.render().bind(this));
+    $(`.card-${this.id}`).innerHTML = this.template();
+  }
+  addEvent() {
+    $(`.item-${this.id}`).addEventListener("dblclick", () =>
+      this.handleCardModification()
+    );
+    $(`.remove-btn-${this.card.id}`).addEventListener("click", (e) => {
+      const modal = new Modal({ target: $(".wrap"), cardId: this.card.id });
+    });
+  }
+
+  handleCardModification() {
+    const cardEl = $(`.item-${this.id}`);
+    hide(cardEl);
+
+    const modificationForm = new CardModificationForm({
+      column: this.column,
+      card: store.state[this.id],
+      type: "modification",
+    });
+    $(`.card-${this.id}`).insertAdjacentHTML(
+      "afterbegin",
+      modificationForm.template()
+    );
+    modificationForm.addEvent();
+
+    function hide(el) {
+      el.style.display = "none";
+    }
   }
 }

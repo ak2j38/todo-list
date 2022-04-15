@@ -30,9 +30,9 @@ export default class Histories {
       this.historyCardComponents = setHistoryDataToHistoryCard(historyData);
       store.setState("history", historyData);
     });
-    $(".history__btn--close").addEventListener("click", () => {
-      hideHistoryView();
-    });
+    // $(".history__btn--close").addEventListener("click", () => {
+    //   hideHistoryView();
+    // });
   }
 }
 
