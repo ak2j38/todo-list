@@ -7,7 +7,7 @@ export class CardModificationForm {
     this.column = column;
     this.card = card;
     this.isOccupiedInput = false;
-    this.type = type; // "addition" or "modification"
+    this.type = type; // type = addition || modification
   }
   template() {
     const MAX_LENGTH = {
@@ -39,7 +39,7 @@ export class CardModificationForm {
     );
     confirmbtn.addEventListener("click", (e) => this.handleAppendCard(e));
   }
-  handleInput(e) {
+  handleInput() {
     const taskTitleEl = $(".task__title");
     const taskDescEl = $(".task__desc");
     this.isOccupiedInput =
@@ -52,16 +52,18 @@ export class CardModificationForm {
     removeClass({ el: confirmBtn, className: "active" });
   }
   removeModificationForm() {
-    removeElement($(".task"));
+    const taskEl = $(".task");
+    removeElement(taskEl);
     this.column.isOpenModificationForm = false;
-
     if (this.type === "modification") {
       const cardEl = $(`.item-${this.card.id}`);
-      cardEl.style.display = "block";
+      show(cardEl);
+    }
+    function show(el) {
+      el.style.display = "block";
     }
   }
-  handleAppendCard(e) {
-    console.log(store);
+  handleAppendCard() {
     if (!this.isOccupiedInput) return;
     const title = $(".task__title").value;
     const contents = $(".task__desc").innerText;

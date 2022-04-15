@@ -1,9 +1,9 @@
 import { $ } from "../utils";
 
 export default class Modal {
-  constructor({ target, card }) {
+  constructor({ target, cardId }) {
     this.target = target;
-    this.card = card;
+    this.cardId = cardId;
     this.render();
     this.addEvent();
   }
@@ -36,7 +36,7 @@ export default class Modal {
     const modalEl = $(`.modal`);
 
     if (isClikedRemoveBtn) {
-      const selectedCardEl = $(`.item-${this.card.id}`);
+      const selectedCardEl = $(`.item-${this.cardId}`);
       selectedCardEl.remove();
       modalEl.remove();
       return;

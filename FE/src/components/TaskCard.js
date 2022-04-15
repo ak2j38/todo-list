@@ -39,13 +39,13 @@ export default class TaskCard {
       this.handleCardModification()
     );
     $(`.remove-btn-${this.card.id}`).addEventListener("click", (e) => {
-      const modalEl = new Modal({ target: $(".wrap"), card: this.card });
+      const modal = new Modal({ target: $(".wrap"), cardId: this.card.id });
     });
   }
 
   handleCardModification() {
     const cardEl = $(`.item-${this.id}`);
-    cardEl.style.display = "none";
+    hide(cardEl);
 
     const modificationForm = new CardModificationForm({
       column: this.column,
@@ -57,5 +57,9 @@ export default class TaskCard {
       modificationForm.template()
     );
     modificationForm.addEvent();
+
+    function hide(el) {
+      el.style.display = "none";
+    }
   }
 }
