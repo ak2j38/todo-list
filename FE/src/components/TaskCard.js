@@ -13,6 +13,7 @@ export default class TaskCard {
     store.subscribe(this.id, () => this.render());
     store.subscribe(this.id, () => this.addEvent());
   }
+
   template() {
     // types = ["idle", "delete", "drag", "place"];
     this.card = store.state[this.id];
@@ -31,9 +32,11 @@ export default class TaskCard {
         </li>
     `;
   }
+
   render() {
     $(`.card-${this.id}`).innerHTML = this.template();
   }
+
   addEvent() {
     $(`.item-${this.id}`).addEventListener("dblclick", () =>
       this.handleCardModification()

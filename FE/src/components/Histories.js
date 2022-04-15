@@ -26,13 +26,14 @@ export default class Histories {
   addEvent() {
     $(".header__menu").addEventListener("click", () => {
       showHistoryView();
-      const historyData = requestHistoryData();
-      this.historyCardComponents = setHistoryDataToHistoryCard(historyData);
-      store.setState("history", historyData);
+      requestHistoryData().then((data) => {
+        this.historyCardComponents = setHistoryDataToHistoryCard(data);
+        store.setState("history", data);
+        $(".history__btn--close").addEventListener("click", () => {
+          hideHistoryView();
+        });
+      });
     });
-    // $(".history__btn--close").addEventListener("click", () => {
-    //   hideHistoryView();
-    // });
   }
 }
 
@@ -44,17 +45,17 @@ function hideHistoryView() {
   $(".history").style.right = "-45.2rem";
 }
 
-function setHistoryDataToHistoryCard(historydata) {
-  return historydata.map((history) => new HistoryCard(history));
+function setHistoryDataToHistoryCard(historyData) {
+  return historyData.map((history) => new HistoryCard(history));
 }
 
 async function requestHistoryData() {
   const url = "http://3.38.224.138/histories";
   const res = await fetch(url, {
     mode: "cors",
-    credentials: "include",
+    // credentials: "include",
   });
-  const data = res.json();
+  const data = await res.json();
 
   return data;
 }
